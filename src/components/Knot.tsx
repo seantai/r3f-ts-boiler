@@ -41,11 +41,9 @@ export const Knot = () => {
               vec3 pos = position;
 
               pos.x += cos(time  / 4.0)  * 0.125;
-              pos.y += sin(time / 4.0)  * 0.125;
+              pos.y += sin(time / 4.0)  * 0.225;
               pos.z += sin(time / 4.0)  * 0.05;
               
-              pos.y += sin(time / 4.0) * 0.1;
-
               float angle = time / 2. + length(pos) * 3.0;
               vec3 offset = vec3(cos(angle), sin(angle), cos(angle) * sin(angle)) * 0.1;
               vec3 newPosition = pos + csm_Normal * offset;

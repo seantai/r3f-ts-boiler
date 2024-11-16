@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 
-type LoadedStore = {
-  isLoaded: boolean;
-  setLoaded: (loaded: boolean) => void;
+type SceneLoadedStore = {
+  isSceneLoaded: boolean;
+  setSceneLoaded: (loaded: boolean) => void;
 };
 
-export const useLoadedStore = create<LoadedStore>((set) => ({
-  isLoaded: false,
-  setLoaded: (loaded) => set({ isLoaded: loaded })
+export const useSceneLoadedStore = create<SceneLoadedStore>((set) => ({
+  isSceneLoaded: false,
+  setSceneLoaded: (loaded) => set({ isSceneLoaded: loaded })
 }));
