@@ -1,8 +1,8 @@
-import { CameraControls } from '@react-three/drei';
 import { Suspense } from 'react';
 import { CanvasWrapper } from './components/CanvasWrapper';
-import { Knot } from './components/Knot';
+import { CameraStuff } from './components/CameraStuff';
 import { Loader } from './components/Loader';
+import { Knot } from './components/Knot';
 // import { Perf } from 'r3f-perf';
 
 const Scene = () => {
@@ -13,11 +13,7 @@ const Scene = () => {
         <Loader />
       </Suspense>
 
-      <CameraControls
-        makeDefault
-        minPolarAngle={Math.PI * 0.3}
-        maxPolarAngle={Math.PI * 0.5}
-      />
+      <CameraStuff />
       {/* <Perf /> */}
     </>
   );
