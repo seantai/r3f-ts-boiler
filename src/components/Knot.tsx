@@ -4,9 +4,12 @@ import { useMemo, useRef } from 'react';
 import { MeshMatcapMaterial, ShaderMaterial } from 'three';
 import CustomShaderMaterial from 'three-custom-shader-material';
 import { useResponsiveScale } from '../lib/utils';
+import { SRGBColorSpace } from 'three';
 
 export const Knot = () => {
   const matcapTexture = useTexture('metal.jpg');
+  console.log(matcapTexture);
+  matcapTexture.colorSpace = SRGBColorSpace;
   const { scale } = useResponsiveScale();
 
   const uniforms = useMemo(

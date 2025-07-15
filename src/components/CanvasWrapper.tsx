@@ -1,6 +1,6 @@
 import { Canvas, CanvasProps } from '@react-three/fiber';
 import { Bvh } from '@react-three/drei';
-import { motion as fm } from 'framer-motion';
+import { motion as fm } from 'motion/react';
 import { useSceneLoadedStore } from '../store';
 
 export const CanvasWrapper = ({
