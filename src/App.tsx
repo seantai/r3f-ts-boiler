@@ -1,27 +1,25 @@
 import { Suspense } from 'react';
-import { CanvasWrapper } from './components/CanvasWrapper';
 import { CameraStuff } from './components/CameraStuff';
-import { Loader } from './components/Loader';
+import { CanvasWrapper } from './components/CanvasWrapper';
 import { Knot } from './components/Knot';
-// import { Perf } from 'r3f-perf';
+import { Loader } from './components/Loader';
 
 const Scene = () => {
   return (
     <>
-      <Suspense fallback={null}>
+      <Suspense>
         <Knot />
         <Loader />
       </Suspense>
 
       <CameraStuff />
-      {/* <Perf /> */}
     </>
   );
 };
 
 export default function App() {
   return (
-    <div className="relative min-h-screen font-inter">
+    <div className="relative min-h-screen">
       <CanvasWrapper>
         <Scene />
       </CanvasWrapper>

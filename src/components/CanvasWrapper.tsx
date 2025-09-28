@@ -1,6 +1,8 @@
-import { Canvas, CanvasProps } from '@react-three/fiber';
 import { Bvh } from '@react-three/drei';
-import { motion as fm } from 'framer-motion';
+import { Canvas } from '@react-three/fiber';
+import { motion as m } from 'motion/react';
+import React from 'react';
+
 import { useSceneLoadedStore } from '../store';
 
 export const CanvasWrapper = ({
@@ -8,12 +10,12 @@ export const CanvasWrapper = ({
   canvasProps = {}
 }: {
   children: React.ReactNode;
-  canvasProps?: Partial<CanvasProps>;
+  canvasProps?: Partial<React.ComponentProps<typeof Canvas>>;
 }) => {
   const { isSceneLoaded } = useSceneLoadedStore();
 
   return (
-    <fm.div
+    <m.div
       initial={{ opacity: 0 }}
       animate={{ opacity: isSceneLoaded ? 1 : 0 }}
       transition={{ duration: 0.6, ease: [0.26, 0.05, 0.25, 1] }}
@@ -24,6 +26,6 @@ export const CanvasWrapper = ({
         eventPrefix="client">
         <Bvh firstHitOnly>{children}</Bvh>
       </Canvas>
-    </fm.div>
+    </m.div>
   );
 };

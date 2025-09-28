@@ -1,62 +1,60 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-export function useResponsiveScale(
+interface UseResponsiveScaleOptions {
+  baseWidth?: number;
+  minScale?: number;
+  maxScale?: number;
+  debounceMs?: number;
+}
+
+interface UseResponsiveScaleReturn {
+  scale: number;
+  width: number;
+  height: number;
+}
+
+/**
+ * Hook for responsive scaling based on window dimensions
+ * @param options Configuration options for the responsive scale
+ * @returns Object containing scale factor and current dimensions
+ */
+export function useResponsiveScale({
   baseWidth = 1300,
   minScale = 0.5,
-  maxScale = 1.2
-) {
-  const [size, setSize] = useState([window.innerWidth, window.innerHeight]);
+  maxScale = 1.2,
+  debounceMs = 50
+}: UseResponsiveScaleOptions = {}): UseResponsiveScaleReturn {
+  const [size, setSize] = useState<[number, number]>([window.innerWidth, window.innerHeight]);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const updateSize = useCallback(() => {
+    setSize([window.innerWidth, window.innerHeight]);
+  }, []);
+
+  const handleResize = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(updateSize, debounceMs);
+  }, [updateSize, debounceMs]);
 
   useEffect(() => {
-    function updateSize() {
-      setSize([window.innerWidth, window.innerHeight]);
-    }
-
-    let timeoutId: ReturnType<typeof setTimeout>;
-    function handleResize() {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(updateSize, 50);
-    }
-
     window.addEventListener('resize', handleResize);
     updateSize();
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [handleResize, updateSize]);
 
   const scale = Math.min(Math.max(size[0] / baseWidth, minScale), maxScale);
 
-  return { scale };
+  return {
+    scale,
+    width: size[0],
+    height: size[1]
+  };
 }
-
-export const usePreventEventsOnElements = (
-  eventTypes: string[],
-  elementIds: string[]
-) => {
-  useEffect(() => {
-    const elements = elementIds
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => el !== null);
-    if (elements.length === 0) return;
-
-    const preventEvent = (e: Event) => {
-      e.stopPropagation();
-    };
-
-    const addedListeners: { element: HTMLElement; eventType: string }[] = [];
-
-    elements.forEach((element) => {
-      eventTypes.forEach((eventType) => {
-        element.addEventListener(eventType, preventEvent, { capture: true });
-        addedListeners.push({ element, eventType });
-      });
-    });
-
-    return () => {
-      addedListeners.forEach(({ element, eventType }) => {
-        element.removeEventListener(eventType, preventEvent, {
-          capture: true
-        });
-      });
-    };
-  }, [elementIds, eventTypes]);
-};

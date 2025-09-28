@@ -1,12 +1,14 @@
 import { ContactShadows, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { useMemo, useRef } from 'react';
-import { MeshMatcapMaterial, ShaderMaterial } from 'three';
+import { type ComponentRef, useMemo, useRef } from 'react';
+import { MeshMatcapMaterial, SRGBColorSpace } from 'three';
 import CustomShaderMaterial from 'three-custom-shader-material';
+
 import { useResponsiveScale } from '../lib/utils';
 
 export const Knot = () => {
   const matcapTexture = useTexture('metal.jpg');
+  matcapTexture.colorSpace = SRGBColorSpace;
   const { scale } = useResponsiveScale();
 
   const uniforms = useMemo(
@@ -15,12 +17,13 @@ export const Knot = () => {
     }),
     []
   );
-
-  const shaderRef = useRef<ShaderMaterial>(null!);
+  const shaderRef = useRef<
+    ComponentRef<typeof CustomShaderMaterial<typeof MeshMatcapMaterial>>
+  >(null!);
 
   useFrame((state) => {
-    if (!shaderRef.current) return;
-    shaderRef.current.uniforms.time.value = state.clock.elapsedTime;
+    if (!shaderRef.current?.uniforms?.['time']) return;
+    shaderRef.current.uniforms['time'].value = state.clock.elapsedTime;
   });
 
   return (
@@ -33,7 +36,6 @@ export const Knot = () => {
           matcap={matcapTexture}
           uniforms={uniforms}
           color={'#F8827A'}
-          silent
           vertexShader={
             /* glsl */ `
             uniform float time;
